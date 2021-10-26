@@ -1,10 +1,12 @@
 // PRIYANGSHU DATTA 19MS033
 
 #include <stdio.h>
-#include <conio.h>
 #include <string.h>
 #include <stdlib.h>
 #include <time.h>
+#ifdef _WIN32
+    #include <conio.h>
+#endif
 
 typedef struct{
     char uname[10];
@@ -33,20 +35,31 @@ void check();
 const char* getpass(){
     char *passwrd;
     char ch;
-    int i;
-    for(i = 0; i < 100; i++){
-        ch = getch();
-        if(ch == 13)
-            break;
-        if (ch == 8){
-            i--;
-            i--;
-            continue;
+    #ifdef _WIN32
+        int i;
+        for(i = 0; i < 100; i++){
+            ch = getch();
+            if(ch == 13)
+                break;
+            if (ch == 8){
+                i--;
+                i--;
+                continue;
+            }
+            passwrd[i] = ch;
         }
-        passwrd[i] = ch;
-    }
-    passwrd[i] = '\0';
-    return passwrd;
+        passwrd[i] = '\0';
+        return passwrd;
+    #elif linux
+        struct termios oldattr, newattr;
+        tcgetattr( STDIN_FILENO, &oldattr );
+        newattr = oldattr;
+        newattr.c_lflag &= ~( ICANON | ECHO );
+        tcsetattr( STDIN_FILENO, TCSANOW, &newattr );
+        gets(passwrd);
+        tcsetattr( STDIN_FILENO, TCSANOW, &oldattr );
+        return passwrd;
+    #endif
 }
 
 int menu(){
