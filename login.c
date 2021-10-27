@@ -1,14 +1,18 @@
 // PRIYANGSHU DATTA 19MS033
 
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-#include <time.h>
 #ifdef _WIN32
+    #include <stdio.h>
+    #include <string.h>
+    #include <stdlib.h>
+    #include <time.h>
     #include <conio.h>
 #elif linux
+    #include <stdio.h>
+    #include <string.h>
+    #include <stdlib.h>
+    #include <time.h>
+    #include <termios.h>
     #include <unistd.h>
-    #include <termio.h>
 #endif
 
 typedef struct{
