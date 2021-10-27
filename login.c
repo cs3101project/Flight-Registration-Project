@@ -6,6 +6,9 @@
 #include <time.h>
 #ifdef _WIN32
     #include <conio.h>
+#elif linux
+    #include <unistd.h>
+    #include <termio.h>
 #endif
 
 typedef struct{
@@ -32,7 +35,7 @@ void booking();
 long int gen_ticket();
 void check();
 
-const char* getpass(){
+const char* getpasswd(){
     char *passwrd;
     char ch;
     #ifdef _WIN32
@@ -116,7 +119,7 @@ void login(int x){
     pass:
     if(!flag){
         printf("Please enter your password: ");
-        strcpy(temp.pass,getpass());
+        strcpy(temp.pass,getpasswd());
         goto l3;
     }
     int logged = 1;
@@ -249,9 +252,9 @@ void userSignup(){
     }
     pass:
     printf("Enter a strong password: ");
-    const char *pass = getpass();
+    const char *pass = getpasswd();
     printf("\nEnter the password to confirm: ");
-    const char *cpass = getpass();
+    const char *cpass = getpasswd();
     if (strcmp(pass,cpass)==0){
         person temp;
         strcpy(temp.uname,uname);
@@ -336,7 +339,7 @@ void booking(person *user){
             printf("\nInformation regarding flights (search flights).");
             printf("Do you want to continue? Press enter to continue, carraige return to quit.\n");
             char ch;
-            ch = getch();
+            ch = getchar();
             switch(ch){
                 case 13:
                     break;
