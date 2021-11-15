@@ -22,14 +22,26 @@ typedef struct{
 }customer;
 
 
+typedef struct{
+    char id[10];
+    int seats;
+    char time[10];
+    char source[20];
+    char destinantion[20];
+}flight;
+
 int menu();
 void login();
 // void user();
+void flights();
+void admin();
 void search();
 void userSignup();
 void booking();
 long int gen_ticket();
 void check();
+void cancel();
+// void delete();
 
 const char* getpass(){
     char *passwrd;
@@ -441,6 +453,36 @@ void check(){
     printf("Invalid Ticket");
     goto label;
 }
+
+void admin(){
+    options:
+    printf("Enter 1 for flight modification, 2 for user deletion, 3 for admin creation, 4 to return to main menu: ");
+    int choice;
+    scanf("%d",choice);
+    switch(choice){
+        case 1:
+            flights();
+            break;
+        case 2:
+            // user_deletion();
+            break;
+        case 3:
+            // admin_creation();
+            break;
+        case 4:
+            menu();
+            break;
+        default:
+            printf("Enter a VALID option.");
+            goto options;
+    }
+}
+
+void flights();
+
+void search();
+
+void cancel();
 
 int main(){
     system("cls");
