@@ -37,12 +37,12 @@ typedef struct{
 
 int menu();
 void login();
-// void user();
+// void user(person*);
 void flights();
 void admin();
 void search();
 void signup(int);
-void booking();
+void booking(person);
 long int gen_ticket();
 void check();
 void cancel();
@@ -94,7 +94,9 @@ int menu(){
 }
 
 void login(){
-    int x;
+    person temp, file;
+    FILE *fp;
+    int x, logged = 0;
     login:
     printf("\nEnter 1 for ADMIN, 2 for USER, 3 for main MENU: ");
     int flag;
@@ -132,8 +134,6 @@ void login(){
             goto login;
             break;
     }
-    person temp, *file;
-    FILE *fp;
     flag = 1;
     new:
     if (x==1){
@@ -151,18 +151,25 @@ void login(){
         strcpy(temp.pass,getpass());
         goto l3;
     }
-    int logged = 0;
-    file = (person *) malloc(sizeof(person));
-    while(fread(file, sizeof(person), 1, fp)==1){
-        if (strcmp(file->uname,temp.uname)==0){
+    // file = (person *) malloc(sizeof(person));
+    while(fread(&file, sizeof(person), 1, fp)==1){
+        if (strcmp(file.uname,temp.uname)==0){
             flag = 0;
             goto pass;
             l3:
-            if(strcmp(file->pass,temp.pass)==0){
-                if(x==1)
+            if(strcmp(file.pass,temp.pass)==0){
+                if(x==1){
                     admin();
-                else
-                    booking(file);
+                    return;
+                }else{
+                    printf("\nEnter 1 for ticket booking, 2 for ticket cancellation: ");
+                    scanf("%d",&flag);
+                    if(flag == 1){
+                        booking(file);
+                    }else{
+                        cancel();
+                    }
+                }
                 logged = 1;
                 break;
             }else{
@@ -171,6 +178,7 @@ void login(){
         }
     }
     fclose(fp);
+    
     if(x && logged==0){
             printf("\nYou are not a ADMIN!\n");
             menu();
@@ -199,7 +207,7 @@ void login(){
         }else{
             printf("\nIncorrect Password!"); 
             l2:
-            printf("\nTry again? Enter 1 to try again, 2 for siging as a different user, 3 to go to MAIN menu: ");
+            printf("\nEnter 1 to try again, 2 for siging as a different user, 3 to go to MAIN menu: ");
             int choice;
             scanf("%d",&choice);
             switch(choice){
@@ -216,6 +224,24 @@ void login(){
                     goto l2;
             }
         }
+    }
+}
+
+void user(person user){
+    w:
+    printf("\nEnter 0 for booking, 1 for cancellation: ");
+    int bol;
+    scanf("%d",&bol);
+    if (!bol){
+
+        // booking(user);
+        // return;
+    }else if (bol) {
+        // cancel();
+        // return;
+    } else{
+        printf("Enter a valid option.");
+        goto w;
     }
 }
 
@@ -300,7 +326,7 @@ long int gen_ticket(char pname[]){
     return ticket_id;
 }
 
-void booking(person *user){
+void booking(person user){
     customer t;
     customer *tp;
     FILE *file;
@@ -314,10 +340,10 @@ void booking(person *user){
     FILE *flight;
     int count=0;
     l1:
-    strcpy(t.name,user->name);
+    strcpy(t.name,user.name);
     file = fopen("booking.dat","r");
     while(fread(tp,sizeof(tp),1,file)==1){
-        if (strcmp(tp->uname,user->uname)==0){
+        if (strcmp(tp->uname,user.uname)==0){
             ntemp = tp->ntickets+1;
             printf("Welcome back, %s",t.name);
             newc=0;
@@ -330,7 +356,7 @@ void booking(person *user){
         ntemp = t.ntickets;
         printf("\nWelcome %s, to e-Booking portal.",t.name);
     }
-    strcpy(t.uname,user->uname);
+    strcpy(t.uname,user.uname);
     int knw;
     printf("\nBooking ticket for self? Enter 1 for YES, 2 for NO: ");
     scanf("%d",&knw);
@@ -635,7 +661,102 @@ void flights(){
 
 // void search();
 
-// void cancel();
+void cancel(){
+    // printf("\nWelcome to cancellation department!");
+    // int ch;
+    // label:
+    // printf("\nTo cancel booked tickets enter 1, to return to user portal enter 2: ");
+    // scanf("%d",&ch);
+    // switch(ch){
+    //     case 1:
+    //         break;
+    //     case 2:
+    //         menu();
+    //         break;
+    //     default:
+    //         printf("Enter a valid option.\n");
+    //         goto label;
+    //         break;
+    // }
+    // customer *temp = (customer*) malloc (sizeof(customer));
+    // FILE *fp1,*fp2;
+    // long int t_id;
+    // printf("Enter ticket id to cancel: ");
+    // scanf("%d",&t_id);
+    // fp1=fopen("booking.dat","r");
+    // fp2=fopen("copy.dat","ab");
+    // if(fp1==NULL){
+    //     fprintf(stderr,"can't open file");
+    //     exit(0);
+    // }
+    // int c=0,t=0;
+    // while(fread(temp,sizeof(temp),1,fp1)==1){   
+    //     t++;
+    //     printf("%ld\n",temp->ticket_id);
+    //     if(temp->ticket_id==t_id){
+    //     }else{
+    //         c++;
+    //         fwrite(&temp,sizeof(customer),1,fp2);
+    //     }
+    // }
+    // printf("\ntotal%d\ncount%d",t,c);
+    // fclose(fp1);
+    // fclose(fp2);
+    // if (remove("booking.dat")==0){
+    //     if (rename("copy.dat","booking.dat")==0){
+    //         printf("Ticket Cancelled successfully. Want to cancel another ticket?");
+    //         goto label;
+    //     }
+    // }else{
+    //     printf("Error");
+    // }
+    printf("\nWelcome!");
+    int ch;
+    label:
+    printf("\nTo cancel booked tickets enter 1, to return to user portal enter 2: ");
+    scanf("%d",&ch);
+    switch(ch){
+        case 1:
+            break;
+        case 2:
+            login();
+            break;
+        default:
+            printf("Enter a valid option.\n");
+            goto label;
+            break;
+    }
+    customer t;
+    FILE *fp1,*fp2;
+    int ticket_id,found = 0;
+    fp1 = fopen("booking.dat","r");
+    fp2 = fopen("temp.dat","a+");
+    printf("ticket id to delete: ");
+    scanf("%d",&ticket_id);
+    while(fread(&t,sizeof(customer),1,fp1))
+    {
+    	if(t.ticket_id==ticket_id){
+    		found = 1;
+		}
+		else
+		    fwrite(&t,sizeof(flight),1,fp2);
+    }
+    fclose(fp1);
+    fclose(fp2);
+    if (found){
+    	fp2 = fopen("temp.dat","r");
+    	fp1= fopen("booking.dat","w");
+    	while(fread(&t,sizeof(flight),1,fp2)){
+    		fwrite(&t,sizeof(flight),1,fp1);
+		}
+		fclose(fp1);
+		fclose(fp2);
+        printf("Ticket cancelled successfully! Want to cancell another?")
+        goto label;
+	} 
+    else
+	    printf("Ticket ID invalid or ticket not found!");
+}
 
 int main(){
     system("cls");
