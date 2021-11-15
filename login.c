@@ -215,12 +215,12 @@ void login(){
 void signup(int x){
     person *temp= (person*) malloc(sizeof(person));
     FILE *fp;
-    if (x){
-        printf("Welcome to new admin registration portal.");
-        fp = fopen("user.dat", "r");
+    if (x==1){
+        printf("Welcome to new admin registration portal.\n");
+        fp = fopen("admin.dat", "r");
     }else{
         printf("\nWelcome to new user registration portal.\n");
-        fp = fopen("admin.dat", "r");
+        fp = fopen("user.dat", "r");
     }
     int bool=1;
     char name[20];
@@ -468,13 +468,13 @@ void admin(){
     options:
     printf("\nEnter 1 for admin creation, 2 for flight modification, 3 for user modification, 4 to return to main menu: ");
     int choice;
-    scanf("%d",choice);
+    scanf("%d",&choice);
     switch(choice){
         case 1:
             signup(1);
             break;
         case 2:
-            flights();
+            // flights();
             break;
         case 3:
             // user_deletion();
