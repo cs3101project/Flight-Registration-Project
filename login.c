@@ -65,7 +65,7 @@ const char* getpass(){
 
 int menu(){
     int choice;
-    printf("\nChoose 1 for LOGIN, 2 for CHECK TICKET STATUS, 3 for FLIGHT SEARCH, 4 for exit: ");
+    printf("\nChoose 1 for LOGIN/REGISTER, 2 for CHECK TICKET STATUS, 3 for FLIGHT SEARCH, 4 for exit: ");
     label:
     scanf("%d",&choice);
     switch(choice){
@@ -92,7 +92,7 @@ int menu(){
 void login(){
     int x;
     login:
-    printf("\nEnter 1 for ADMIN, 2 for USER: ");
+    printf("\nEnter 1 for ADMIN, 2 for USER, 3 for main MENU: ");
     int flag;
     scanf("%d",&flag);
     switch(flag){
@@ -119,6 +119,9 @@ void login(){
                 goto label;
                 break;
             }
+            break;
+        case 3:
+            menu();
             break;
         default:
             printf("Enter a valid option.");
@@ -265,9 +268,9 @@ void signup(int x){
         strcpy(temp.name,name);
         strcpy(temp.pass,pass);
         if (x){
-            fp = fopen("user.dat", "ab");
-        }else{
             fp = fopen("admin.dat", "ab");
+        }else{
+            fp = fopen("user.dat", "ab");
         }
         fwrite(&temp, sizeof(temp), 1, fp);
         printf("\nAccount created successfully!");
