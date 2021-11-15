@@ -411,18 +411,20 @@ void booking(person *user){
     int booking = 1;
     int age;
     while(booking){
+        int basefare=1000;
         ag:
         printf("Age of passenger: ");
         scanf("%d",&age);
         if(age < 3){
+        	basefare*1;
             c1:
-            printf("The passenger is an infant. The fair is Rs. ______. Enter 1 to confirm, 2 to change age: ");
+            printf("The passenger is an infant. The fair is Rs. %d. Enter 1 to confirm, 2 to change age: ",basefare);
         }else if (age<=12 && age>=3){
             c2:
-            printf("The passenger is an child. The fair is Rs. ______. Enter 1 to confirm, 2 to change age: ");
+            printf("The passenger is an child. The fair is Rs. %d. Enter 1 to confirm, 2 to change age: ",basefare*2);
         }else if (age > 12){
             c3:
-            printf("The passenger adult. The fair is Rs. ______. Enter 1 to confirm, 2 to change age: ");
+            printf("The passenger adult. The fair is Rs. %d. Enter 1 to confirm, 2 to change age: ",basefare*3);
         } else {
             printf("Enter a valid age.\n");
             goto ag;
