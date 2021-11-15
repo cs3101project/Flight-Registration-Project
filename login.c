@@ -20,8 +20,11 @@ typedef struct{
     int ntickets;
     long int ticket_id;
     char f_id[10];
+    char f_dt[20];
+    char f_mt[20];
+    char f_yr[20];
+    char b_time[20];
 }customer;
-
 
 typedef struct{
     char id[10];
@@ -292,7 +295,7 @@ long int gen_ticket(char pname[]){
     }
     time(&sec);
     ticket_id = sec+num; 
-    printf("\n%ld\n",ticket_id);
+    // printf("\n%ld\n",ticket_id);
     return ticket_id;
 }
 
@@ -302,6 +305,13 @@ void booking(person *user){
     FILE *file;
     int newc=1;
     int ntemp; 
+    const char * months[12] = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
+    int flag=1;
+    int d,m,y;
+    char dt[3], yr[6], f_id[10];
+    flight fl;
+    FILE *flight;
+    int count=0;
     l1:
     strcpy(t.name,user->name);
     file = fopen("booking.dat","r");
@@ -339,6 +349,35 @@ void booking(person *user){
     scanf("%d",&knw);
     switch (knw){
     case 1:
+        fid:
+        printf("Enter the flight ID: ");
+        scanf("%s",f_id);
+        flight = fopen("flight.txt","r");
+        while(fread(&fl,sizeof(fl),1,flight)==1){
+            if (fl.id == f_id){
+                count = 1;
+                break;
+            }
+        }
+        if (count){
+            printf("Invalid flight ID.");
+            goto fid;
+        }
+        strcpy(t.f_id,f_id);
+        while (flag){
+            printf("\nNow please enter date of travel.");
+            printf("\nEnter date: ");
+            scanf("%d", &d);
+            printf("Enter month: ");
+            scanf("%d", &m);
+            printf("Enter year: ");
+            scanf("%d", &y);
+            printf("\nYour prefered choice of travel date is %d %s %d. Enter 0 to confirm, 1 to change date: ", d,months[m-1],y);
+            scanf("%d",&flag);
+        }
+        strcpy(t.f_dt,itoa(d,dt,10));
+        strcpy(t.f_mt,months[m-1]);
+        strcpy(t.f_yr,itoa(d,yr,10));
         break;
     case 2:
         // flightInfo();
@@ -395,6 +434,9 @@ void booking(person *user){
                 t.ntickets++;
                 t.ticket_id;
                 t.ticket_id = gen_ticket(t.p_name);
+                time_t curtime;
+                time(&curtime);
+                strcpy(t.b_time,ctime(&curtime));
                 fwrite(&t,sizeof(customer),1,fp);
                 printf("Successfully booked! The ticket id is: %ld",t.ticket_id);
                 booking = 0;
@@ -458,7 +500,7 @@ void check(){
     while(fread(&temp,sizeof(customer),1,fp)==1){
         if (temp.ticket_id == ticket){
             printf("Ticket found.");
-            printf("\nPassenger: %s\nAge: %d\nBooked under: %s\n",temp.p_name,temp.p_age,temp.uname);
+            printf("\nPassenger: %s\nFlight Date: %s %s %s\nFlight ID: %s\nAge: %d\nBooked under: %s\nDate of Booking: %s",temp.p_name,temp.f_dt,temp.f_mt,temp.f_yr,temp.f_id,temp.p_age,temp.uname,temp.b_time);
             goto label;
             return;
         }
