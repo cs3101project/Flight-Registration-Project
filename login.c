@@ -19,6 +19,7 @@ typedef struct{
     int p_age;
     int ntickets;
     long int ticket_id;
+    char f_id[10];
 }customer;
 
 
@@ -36,7 +37,7 @@ void login();
 void flights();
 void admin();
 void search();
-void userSignup();
+void signup(int);
 void booking();
 long int gen_ticket();
 void check();
@@ -108,7 +109,7 @@ void login(){
             x=0;
                 break;
             case 2:
-                userSignup();
+                signup(0);
                 break;
             case 3:
                 menu();
@@ -152,7 +153,7 @@ void login(){
             l3:
             if(strcmp(file->pass,temp.pass)==0){
                 if(x==1)
-                    printf("\nAdmin()");
+                    admin();
                 else
                     booking(file);
                 logged = 1;
@@ -175,7 +176,7 @@ void login(){
             scanf("%d",&choice);
             switch(choice){
                 case 1:
-                    userSignup();
+                    signup(0);
                     break;
                 case 2:
                     goto new;
@@ -211,9 +212,16 @@ void login(){
     }
 }
 
-void userSignup(){
+void signup(int x){
     person *temp= (person*) malloc(sizeof(person));
-    printf("\nWelcome to registration portal.\n");
+    FILE *fp;
+    if (x){
+        printf("Welcome to new admin registration portal.");
+        fp = fopen("user.dat", "r");
+    }else{
+        printf("\nWelcome to new user registration portal.\n");
+        fp = fopen("admin.dat", "r");
+    }
     int bool=1;
     char name[20];
     while(bool){
@@ -227,8 +235,6 @@ void userSignup(){
     printf("%s, please enter a username (It will be used to log you in to book flights.): ",name);
     char uname[10];
     scanf("%s",uname);
-    FILE *fp;
-    fp = fopen("user.dat", "r");
     while(fread(temp,sizeof(person),1,fp)==1){
         if (strcmp(uname,temp->uname)==0){
             printf("Username is taken, please try a different one.\n");
@@ -258,7 +264,11 @@ void userSignup(){
         strcpy(temp.uname,uname);
         strcpy(temp.name,name);
         strcpy(temp.pass,pass);
-        fp = fopen("user.dat", "ab");
+        if (x){
+            fp = fopen("user.dat", "ab");
+        }else{
+            fp = fopen("admin.dat", "ab");
+        }
         fwrite(&temp, sizeof(temp), 1, fp);
         printf("\nAccount created successfully!");
         fclose(fp);
@@ -456,18 +466,18 @@ void check(){
 
 void admin(){
     options:
-    printf("Enter 1 for flight modification, 2 for user deletion, 3 for admin creation, 4 to return to main menu: ");
+    printf("\nEnter 1 for admin creation, 2 for flight modification, 3 for user modification, 4 to return to main menu: ");
     int choice;
     scanf("%d",choice);
     switch(choice){
         case 1:
-            flights();
+            signup(1);
             break;
         case 2:
-            // user_deletion();
+            flights();
             break;
         case 3:
-            // admin_creation();
+            // user_deletion();
             break;
         case 4:
             menu();
@@ -478,7 +488,10 @@ void admin(){
     }
 }
 
-void flights();
+void flights(){
+    printf("Enter 1 for add flight, 2 for delete flight, 3 for modify flight: ");
+
+}
 
 void search();
 
