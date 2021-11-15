@@ -662,55 +662,7 @@ void flights(){
 // void search();
 
 void cancel(){
-    // printf("\nWelcome to cancellation department!");
-    // int ch;
-    // label:
-    // printf("\nTo cancel booked tickets enter 1, to return to user portal enter 2: ");
-    // scanf("%d",&ch);
-    // switch(ch){
-    //     case 1:
-    //         break;
-    //     case 2:
-    //         menu();
-    //         break;
-    //     default:
-    //         printf("Enter a valid option.\n");
-    //         goto label;
-    //         break;
-    // }
-    // customer *temp = (customer*) malloc (sizeof(customer));
-    // FILE *fp1,*fp2;
-    // long int t_id;
-    // printf("Enter ticket id to cancel: ");
-    // scanf("%d",&t_id);
-    // fp1=fopen("booking.dat","r");
-    // fp2=fopen("copy.dat","ab");
-    // if(fp1==NULL){
-    //     fprintf(stderr,"can't open file");
-    //     exit(0);
-    // }
-    // int c=0,t=0;
-    // while(fread(temp,sizeof(temp),1,fp1)==1){   
-    //     t++;
-    //     printf("%ld\n",temp->ticket_id);
-    //     if(temp->ticket_id==t_id){
-    //     }else{
-    //         c++;
-    //         fwrite(&temp,sizeof(customer),1,fp2);
-    //     }
-    // }
-    // printf("\ntotal%d\ncount%d",t,c);
-    // fclose(fp1);
-    // fclose(fp2);
-    // if (remove("booking.dat")==0){
-    //     if (rename("copy.dat","booking.dat")==0){
-    //         printf("Ticket Cancelled successfully. Want to cancel another ticket?");
-    //         goto label;
-    //     }
-    // }else{
-    //     printf("Error");
-    // }
-    printf("\nWelcome!");
+    printf("\nWelcome to cancellation department!");
     int ch;
     label:
     printf("\nTo cancel booked tickets enter 1, to return to user portal enter 2: ");
@@ -719,7 +671,7 @@ void cancel(){
         case 1:
             break;
         case 2:
-            login();
+            menu();
             break;
         default:
             printf("Enter a valid option.\n");
@@ -751,7 +703,7 @@ void cancel(){
 		}
 		fclose(fp1);
 		fclose(fp2);
-        printf("Ticket cancelled successfully! Want to cancell another?")
+        printf("Ticket cancelled successfully! Want to cancell another?");
         goto label;
 	} 
     else
@@ -763,3 +715,5 @@ int main(){
     menu();
     return 0;
 }
+
+// 1636981736
