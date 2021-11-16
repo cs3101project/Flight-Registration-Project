@@ -116,7 +116,7 @@ void login(){
             scanf("%d",&choice);
             switch (choice){
             case 1:
-            x=0;
+                x=0;
                 break;
             case 2:
                 signup(0);
@@ -336,7 +336,7 @@ void booking(person user){
     int count=1;
     l1:
     strcpy(t.name,user.name);
-    file = fopen("booking.dat","r");
+    file = fopen("booking.dat","rb");
     while(fread(tp,sizeof(tp),1,file)==1){
         if (strcmp(tp->uname,user.uname)==0){
             ntemp = tp->ntickets+1;
@@ -480,7 +480,7 @@ void booking(person user){
                         break;
                     case 2:
                         menu();
-                        return;
+                        // return;
                         break;
                     default:
                         printf("Enter a valid option.\n");
@@ -509,7 +509,7 @@ void check(){
     printf("\nWelcome!");
     int ch;
     label:
-    printf("\nTo see status of ticket enter 1, to return to user portal enter 2: ");
+    printf("\nTo see status of ticket enter 1, to return to LOGIN portal enter 2: ");
     scanf("%d",&ch);
     switch(ch){
         case 1:
@@ -580,7 +580,10 @@ void flights(){
         scanf("%d",&choice);
         switch (choice){
             case 0:
-                printf("\nFLIGHTS AVAILABLE");
+                // printf("\nFLIGHTS AVAILABLE\n");
+                // printf("%-5s  %-20s");
+                // printf("%-20s  %-20s",modif.source,modif.destination);
+                // printf("%4d  %4d\n",modif.seats,modif.fare);
                 while(fread(&modif,sizeof(modif),1,file)==1){
                     printf("%-5s  %-20s",modif.id,modif.name);
                     printf("%-20s  %-20s",modif.source,modif.destination);
@@ -652,8 +655,8 @@ void flights(){
             case 2: // delete flights
                 label:
                 fclose(file);
-                fopen("flights.dat","a+b");
-                printf("\nFLIGHTS AVAILABLE");
+                file = fopen("flights.dat","a+b");
+                // printf("\nFLIGHTS AVAILABLE");
                 while(fread(&modif,sizeof(modif),1,file)==1){
                     printf("%-5s  %-20s",modif.id,modif.name);
                     printf("%-20s  %-20s",modif.source,modif.destination);
@@ -712,19 +715,19 @@ void flights(){
             case 3: // modify flight
                 modify:
                 fclose(file);
-                fopen("flights.dat","a+b");
-                printf("\nFLIGHTS AVAILABLE");
+                file = fopen("flights.dat","a+b");
+                // printf("\nFLIGHTS AVAILABLE");
                 while(fread(&modif,sizeof(modif),1,file)==1){
                     printf("%-5s  %-20s",modif.id,modif.name);
                     printf("%-20s  %-20s",modif.source,modif.destination);
-                    printf("%4d  %4d",modif.seats,modif.fare);
+                    printf("%4d  %4d\n",modif.seats,modif.fare);
                     ++count;
                 }
                 if(!count){
                     printf("\nNo flights are available to modify!\n");
                     menu();
                 }
-                printf("Enter Flight ID to modify: ");
+                printf("\nEnter Flight ID to modify: ");
                 scanf("%s",id);
                 t = fopen("temp.dat","wb");
                 flag = 1;
@@ -985,7 +988,7 @@ void search(){
 	int found=0;
 	char text[20];
 	fp = fopen("flights.dat","rb");
-	printf("Enter Destination to search : ");
+	printf("Enter free text to search : ");
 	scanf("%s",text);
 	while(fread(&f1,sizeof(flight),1,fp)){
     int flag1=0,flag2=0,flag3=0,flag4=0,i=0;  // integer variables declaration   
@@ -1047,13 +1050,13 @@ void cancel(person user){
     printf("\nWelcome to cancellation department!");
     int ch;
     label:
-    printf("\nTo cancel booked tickets enter 1, to return to user portal enter 2: ");
+    printf("\nTo cancel booked tickets enter 1, to return to login menu enter 2: ");
     scanf("%d",&ch);
     switch(ch){
         case 1:
             break;
         case 2:
-            menu();
+            login();
             break;
         default:
             printf("Enter a valid option.\n");
