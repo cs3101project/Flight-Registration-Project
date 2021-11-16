@@ -595,13 +595,6 @@ void flights(){
         scanf("%d",&choice);
         switch (choice){
             case 0:
-                // printf("\nFLIGHTS AVAILABLE\n");
-                // printf("%-5s  %-20s");
-                // printf("%-20s  %-20s",modif.source,modif.destination);
-                // printf("%4d  %4d\n",modif.seats,modif.fare);
-                printf("%-5sID  %-20sNAME");
-                printf("%-20sFROM  %-20sTO");
-                printf("%4dSEATS  %4dFARE\n");
                 file = fopen("flights.dat","rb"); 
                 while(fread(&modif,sizeof(modif),1,file)==1){
                     printf("%-5s  %-20s",modif.id,modif.name);
@@ -640,9 +633,10 @@ void flights(){
                 for(i=0;i<3;i++){
                     fl.id[i]=fl.name[i];
                 }
+                fl.id[3] = '\0';
                 ch1 = fl.source[0],ch2=fl.destination[0];
                 ch3 = ch1*100+ch2;
-                itoa(ch3,num,10);
+                sprintf(num,"%d",ch3);
                 file = fopen("flights.dat","a+b"); 
                 strcat(fl.id,num);
                 while(fread(&temp,sizeof(flight),1,file)==1){
@@ -673,12 +667,7 @@ void flights(){
                 break;
             case 2: // delete flights
                 label:
-                // fclose(file);
                 file = fopen("flights.dat","rb");
-                // printf("\nFLIGHTS AVAILABLE");
-                printf("%-5sID  %-20sNAME");
-                printf("%-20sFROM  %-20sTO");
-                printf("%4dSEATS  %4dFARE\n");
                 while(fread(&modif,sizeof(modif),1,file)==1){
                     printf("%-5s  %-20s",modif.id,modif.name);
                     printf("%-20s  %-20s",modif.source,modif.destination);
@@ -737,12 +726,7 @@ void flights(){
                 break;
             case 3: // modify flight
                 modify:
-                // fclose(file);
                 file = fopen("flights.dat","rb");
-                // printf("\nFLIGHTS AVAILABLE");
-                printf("%-5sID  %-20sNAME");
-                printf("%-20sFROM  %-20sTO");
-                printf("%4dSEATS  %4dFARE\n");
                 while(fread(&modif,sizeof(modif),1,file)==1){
                     printf("%-5s  %-20s",modif.id,modif.name);
                     printf("%-20s  %-20s",modif.source,modif.destination);
