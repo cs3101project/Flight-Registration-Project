@@ -641,7 +641,7 @@ void flights(){
                 strcat(fl.id,num);
                 while(fread(&temp,sizeof(flight),1,file)==1){
                     if (strcmp(fl.id,temp.id)==0){
-                        printf("Error! Flight with same ID exists.");
+                        printf("Error! Flight with same ID exists.\n");
                         goto zero;
                         break;
                     }
@@ -769,7 +769,7 @@ void flights(){
                         getchar();
                         fgets(mod,14,stdin);
                         int res = sscanf(mod,"%d %d %d %d %d %d %d",&p[0],&p[1],&p[2],&p[3],&p[4],&p[5],&p[6]);
-                        printf("%d\n",res);
+                        // printf("%d\n",res);
                         int check[8] = {0,0,0,0,0,0,0,0};
                         for (i = 0; i < res ; i++){
                             switch(p[i]){
