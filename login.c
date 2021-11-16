@@ -331,7 +331,7 @@ void booking(person user){
     int flag=1;
     int d,m,y;
     char dt[3], yr[6], f_id[10];
-    flight fl;
+    flight fl, tempo;
     FILE *flight;
     int count=1;
     l1:
@@ -376,13 +376,13 @@ void booking(person user){
         scanf("%s",f_id);
         flight = fopen("flights.dat","rb");
         while(fread(&fl,sizeof(fl),1,flight)==1){
-            if (strcmp(fl.id,f_id)==0){
+            if ((strcmp(fl.id,f_id)==0) && fl.seats > 0){
                 count = 0;
                 break;
             }
         }
         if (count){
-            printf("Invalid flight ID.");
+            printf("Invalid flight ID or No seats available.");
             goto fid;
         }
         strcpy(t.f_id,f_id);
@@ -469,6 +469,19 @@ void booking(person user){
                 time_t curtime;
                 time(&curtime);
                 // printf("%d",t.fare);
+                fl.seats--;
+                FILE *fli;
+                fli = fopen("temp.dat","wb");
+                while(fread(&tempo,sizeof(tempo),1,flight)==1){
+                    if (strcmp(tempo.id,fl.id)==0){
+                        tempo.seats = tempo.seats - 1;
+                    }
+                    fwrite(&tempo,sizeof(tempo),1,fli);
+                }
+                fclose(flight);
+                fclose(fli);
+                remove("flights.dat");
+                rename("temp.dat","flights.dat");
                 strcpy(t.b_time,ctime(&curtime));
                 fwrite(&t,sizeof(customer),1,fp);
                 printf("Successfully booked! The ticket id is: %ld",t.ticket_id);
@@ -586,7 +599,9 @@ void flights(){
                 // printf("%-5s  %-20s");
                 // printf("%-20s  %-20s",modif.source,modif.destination);
                 // printf("%4d  %4d\n",modif.seats,modif.fare);
-
+                printf("%-5sID  %-20sNAME");
+                printf("%-20sFROM  %-20sTO");
+                printf("%4dSEATS  %4dFARE\n");
                 file = fopen("flights.dat","rb"); 
                 while(fread(&modif,sizeof(modif),1,file)==1){
                     printf("%-5s  %-20s",modif.id,modif.name);
@@ -661,6 +676,9 @@ void flights(){
                 // fclose(file);
                 file = fopen("flights.dat","rb");
                 // printf("\nFLIGHTS AVAILABLE");
+                printf("%-5sID  %-20sNAME");
+                printf("%-20sFROM  %-20sTO");
+                printf("%4dSEATS  %4dFARE\n");
                 while(fread(&modif,sizeof(modif),1,file)==1){
                     printf("%-5s  %-20s",modif.id,modif.name);
                     printf("%-20s  %-20s",modif.source,modif.destination);
@@ -722,6 +740,9 @@ void flights(){
                 // fclose(file);
                 file = fopen("flights.dat","rb");
                 // printf("\nFLIGHTS AVAILABLE");
+                printf("%-5sID  %-20sNAME");
+                printf("%-20sFROM  %-20sTO");
+                printf("%4dSEATS  %4dFARE\n");
                 while(fread(&modif,sizeof(modif),1,file)==1){
                     printf("%-5s  %-20s",modif.id,modif.name);
                     printf("%-20s  %-20s",modif.source,modif.destination);
