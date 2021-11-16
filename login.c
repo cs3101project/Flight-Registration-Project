@@ -1105,6 +1105,7 @@ void cancel(person user){
 
 int main(){
     system("cls");
+    printf("\nWELCOME TO IISER KOLKATA FLIGHT BOOKING SYSTEM\n");
     menu();
     return 0;
 }
