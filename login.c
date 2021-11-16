@@ -24,6 +24,7 @@ typedef struct{
     char f_mt[20];
     char f_yr[20];
     char b_time[20];
+    int fare;
 }customer;
 
 typedef struct{
@@ -439,12 +440,15 @@ void booking(person user){
         	basefare*1;
             c1:
             printf("The passenger is an infant. The fair is Rs. %d. Enter 1 to confirm, 2 to change age: ",basefare);
+            t.fare = basefare;
         }else if (age<=12 && age>=3){
             c2:
             printf("The passenger is an child. The fair is Rs. %d. Enter 1 to confirm, 2 to change age: ",basefare*2);
+            t.fare = basefare*2;
         }else if (age > 12){
             c3:
             printf("The passenger adult. The fair is Rs. %d. Enter 1 to confirm, 2 to change age: ",basefare*3);
+            t.fare = basefare*3;
         } else {
             printf("Enter a valid age.\n");
             goto ag;
@@ -526,7 +530,7 @@ void check(){
     while(fread(&temp,sizeof(customer),1,fp)==1){
         if (temp.ticket_id == ticket){
             printf("Ticket found.");
-            printf("\nPassenger: %s\nFlight Date: %s %s %s\nFlight ID: %s\nAge: %d\nBooked under: %s\nDate of Booking: %s",temp.p_name,temp.f_dt,temp.f_mt,temp.f_yr,temp.f_id,temp.p_age,temp.uname,temp.b_time);
+            printf("\nPassenger: %s\nFlight Date: %s %s %s\nFlight ID: %s\nAge: %d\nBooked under: %s\nFare: %d\nDate of Booking: %s",temp.p_name,temp.f_dt,temp.f_mt,temp.f_yr,temp.f_id,temp.p_age,temp.uname,t.fare,temp.b_time);
             goto label;
             return;
         }
