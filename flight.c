@@ -1,13 +1,11 @@
 #include<stdio.h>
 
 typedef struct flight{
-	int num;
+	char num[20];
 	char name[20];
-	struct det{
-		char sour[20];
-		char dest[20];
-		char time[20];
-	} det;
+	char sour[20];
+	char dest[20];
+	char time[20];
 	int seat;
 	int fare;
 }flight;
@@ -32,10 +30,10 @@ void newflight(){
 		scanf("%[^\n]f",f[i].name);
 		
 		printf("Enter Source Airport :");
-		scanf("%s",f[i].det.sour);
+		scanf("%s",f[i].sour);
 		
 		printf("Enter Destination Airport :");
-		scanf("%s",f[i].det.dest);
+		scanf("%s",f[i].dest);
 		
 		printf("Enter seats : ");
 		scanf("%d",&f[i].seat);
@@ -55,7 +53,7 @@ void display(){
 	while(fread(&f1,sizeof(flight),1,fp))
 	{
 		printf("\n%-5d  %-20s",f1.num,f1.name);
-		printf("%-20s  %-20s",f1.det.sour,f1.det.dest);
+		printf("%-20s  %-20s",f1.sour,f1.dest);
 		printf("%4d  %4d\n",f1.seat,f1.fare);
 	}
 	
@@ -81,10 +79,10 @@ void addflight(){
 		scanf("%[^\n]f",f[i].name);
 		
 		printf("Enter Source Airport :");
-		scanf("%s",f[i].det.sour);
+		scanf("%s",f[i].sour);
 		
 		printf("Enter Destination Airport :");
-		scanf("%s",f[i].det.dest);
+		scanf("%s",f[i].dest);
 		
 		printf("Enter seats : ");
 		scanf("%d",&f[i].seat);
@@ -112,29 +110,56 @@ void search(){
 	flight f1;
 	FILE *fp;
 	int num,found=0;
-	char dest[20];
+	char text[20];
 	fp = fopen("allflights.txt","r");
-	printf("Enter Flight Number or dest to search : ");
+	printf("Enter FREE-TEXT to search FLIGHT: ");
 	//scanf("%d",&num);
-	scanf("%s",dest);
+	scanf("%s",text);
 	while(fread(&f1,sizeof(flight),1,fp))
 	{
-	int flag=0,i=0;  // integer variables declaration  
-    while(f1.det.dest[i]!='\0' &&dest[i]!='\0')  // while loop  
+	int flag1=0,flag2=0,flag3=0,i=0;  // integer variables declaration  
+	 
+		//USING DESTINATION
+    while(f1.dest[i]!='\0' &&text[i]!='\0')   
     {  
-       if(f1.det.dest[i]!=dest[i])  
+       if(f1.dest[i]!=text[i])  
        {  
-           flag=1;  
+           flag1=1;  
            break;  
        }  
        i++;  
-    }    
-		if(flag==0){
+    }
+	
+    //USING SOURCE
+    while(f1.sour[i]!='\0' &&text[i]!='\0')   
+    {  
+       if(f1.sour[i]!=text[i])  
+       {  
+           flag2=1;  
+           break;  
+       }  
+       i++;  
+    }
+    
+	
+	//USING FLIGHT NAME
+    while(f1.name[i]!='\0' &&text[i]!='\0')   
+    {  
+       if(f1.name[i]!=text[i])  
+       {  
+           flag3=1;  
+           break;  
+       }  
+       i++;  
+    }
+    
+    if(flag1==0||flag2==0||flag3==0){
 		found=1;
 		printf("\n%-5d  %-20s",f1.num,f1.name);
-		printf("%-20s  %-20s",f1.det.sour,f1.det.dest);
+		printf("%-20s  %-20s",f1.sour,f1.dest);
 		printf("%4d  %4d\n",f1.seat,f1.fare);
 	}
+
 	}
 	if(!found){
 		printf("\nFlight NOT found\n");
