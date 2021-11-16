@@ -715,7 +715,7 @@ void flights(){
             case 3: // modify flight
                 modify:
                 fclose(file);
-                file = fopen("flights.dat","a+b");
+                file = fopen("flights.dat","rb");
                 // printf("\nFLIGHTS AVAILABLE");
                 while(fread(&modif,sizeof(modif),1,file)==1){
                     printf("%-5s  %-20s",modif.id,modif.name);
@@ -727,10 +727,12 @@ void flights(){
                     printf("\nNo flights are available to modify!\n");
                     menu();
                 }
+                fclose(file);
                 printf("\nEnter Flight ID to modify: ");
                 scanf("%s",id);
                 t = fopen("temp.dat","wb");
                 flag = 1;
+                file = fopen("flights.dat","a+b");
                 while(fread(&fl,sizeof(flight),1,file)==1){
                     ++total;
                     if (strcmp(fl.id,id)==0){
@@ -895,7 +897,6 @@ void flights(){
                             }
                         }
 
-                        
                         if((check[2]==3) || (check[3]==4) || (check[4]==5)){
                             char n_id[10];
                             for(i=0;i<3;i++){
@@ -928,18 +929,14 @@ void flights(){
                 fclose(t);
                 t = fopen("temp.dat","rb");
                 while(fread(&modif,sizeof(fl),1,t)==1){
-                    // fwrite(&modif,sizeof(modif),1,file);
                     printf("\n%s\n",modif.id);
-                    // printf("%d\n",modif.seats);
-                    // printf("%s\n",modif.source);
                 }
-                if((count==total)){
+                if(count==total){
                     fclose(t);
                     fclose(file);
                     remove("flights.dat");
                     rename("temp.dat","flights.dat");
                     printf("Modification successful.");
-                    // rename("temp.dat","flights.dat");
                 }else{
                     printf("Some error occured");
                     exit(0);
