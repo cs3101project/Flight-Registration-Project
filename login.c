@@ -914,7 +914,7 @@ void flights(){
                             for(i=0;i<3;i++){
                                 n_id[i]=temp.name[i];
                             }
-                            fl.id[3] = '\0';
+                            n_id[3] = '\0';
                             ch1 = temp.source[0];
                             ch2 = temp.destination[0];
                             ch3 = ch1*100+ch2;
@@ -1110,7 +1110,7 @@ void cancel(person user){
 }
 
 int main(){
-    // system("cls");
+    system("cls");
     menu();
     return 0;
 }
