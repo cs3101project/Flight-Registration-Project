@@ -601,7 +601,8 @@ void flights(){
                 scanf("%s",fl.destination);
                 // fgets(fl.destination,20,stdin);
                 printf("Enter the name of the flight : ");
-                scanf("%s",fl.name);
+                fflush(stdin);
+                scanf("%[^\n]f",fl.name);
                 // fgets(fl.name,20,stdin);
                 printf("Source : %s\nDestination:%s\nFlight name:%s\n",fl.source,fl.destination,fl.name);
                 one:
