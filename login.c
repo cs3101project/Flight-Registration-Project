@@ -568,7 +568,7 @@ void flights(){
 	int choice=0;
     char id[10], mod[10], num[20];
     int p[7];
-    int flag, ch, ch1, ch2, ch3, h, m, i;
+    int flag, ch, ch1, ch2, ch3, h, m, i, j;
     char th[10], tm[10];
     FILE *file, *t;
 	flight fl,temp, modif;
@@ -583,6 +583,7 @@ void flights(){
                 // printf("%-5s  %-20s");
                 // printf("%-20s  %-20s",modif.source,modif.destination);
                 // printf("%4d  %4d\n",modif.seats,modif.fare);
+
                 file = fopen("flights.dat","rb"); 
                 while(fread(&modif,sizeof(modif),1,file)==1){
                     printf("%-5s  %-20s",modif.id,modif.name);
@@ -754,12 +755,16 @@ void flights(){
                         printf("\n6. fare: Rs. %d\n", fl.fare);
                         temp.fare=fl.fare;
                         flag = 0;
-// modification starts
+                        // modification starts
                         chan:
                         printf("Enter the serial number of the property you want to modify for the flight %s: ", fl.name);
                         getchar();
-                        fgets(mod,12,stdin);
-                        int res = sscanf(mod,"%d %d %d %d %d %d",&p[0],&p[1],&p[2],&p[3],&p[4],&p[5],&p[6]);
+                        fgets(mod,14,stdin);
+                        int res = sscanf(mod,"%d %d %d %d %d %d %d",&p[0],&p[1],&p[2],&p[3],&p[4],&p[5],&p[6]);
+                        printf("%d\n",res);
+                        for(i=0;i<res;i++){
+                            printf("%d\n",p[i]);
+                        }
                         int check[8] = {0,0,0,0,0,0,0,0};
                         for (i = 0; i < res ; i++){
                             switch(p[i]){
@@ -784,7 +789,6 @@ void flights(){
                                 case 2:
                                     t:
                                     printf("Enter the modified flight timing. (current time of flight: %s)",fl.time);
-                                    // printf("\nEnter flight time.");
                                     printf("\nEnter hours: ");
                                     scanf("%d", &h);
                                     printf("Enter minutes: ");
@@ -792,8 +796,8 @@ void flights(){
                                     itoa(h,th,10);
                                     itoa(m,tm,10);
                                     strcat(th,":"); strcat(th,tm);
-                                    for(i=0;i<strlen(th);i++){
-                                        temp.time[i]=th[i];
+                                    for(j=0;j<strlen(th);j++){
+                                        temp.time[j]=th[j];
                                     }
                                     t1:
                                     printf("Enter 1 to confirm, 2 to change new timing of flight (current: %s; modified: %s)\nEnter 3 to exit modification menu: ",fl.time,temp.time);
@@ -927,6 +931,7 @@ void flights(){
                         fwrite(&fl,sizeof(fl),1,t);
                         ++count;
                     }
+                    
                 }
                 fclose(t);
                 fclose(file);
@@ -959,7 +964,7 @@ void flights(){
                             login();
                             break;
                         case 3:
-                            choice =0;
+                            choice = 0;
                             break;
                         default:
                             printf("Enter a valid option.");
