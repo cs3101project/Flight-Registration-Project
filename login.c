@@ -918,7 +918,7 @@ void flights(){
                             ch1 = temp.source[0];
                             ch2 = temp.destination[0];
                             ch3 = ch1*100+ch2;
-                            sprintf(ch3,"%d",num);
+                            sprintf(num,"%d",ch3);
                             strcat(n_id,num);
                             strcpy(temp.id,n_id);
                             while(fread(&modif,sizeof(flight),1,file)==1){
@@ -1110,7 +1110,7 @@ void cancel(person user){
 }
 
 int main(){
-    system("cls");
+    // system("cls");
     menu();
     return 0;
 }
