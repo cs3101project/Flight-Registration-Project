@@ -376,13 +376,13 @@ void booking(person user){
         scanf("%s",f_id);
         flight = fopen("flights.dat","rb");
         while(fread(&fl,sizeof(fl),1,flight)==1){
-            if ((strcmp(fl.id,f_id)==0) && fl.seats > 0){
+            if ((strcmp(fl.id,f_id)==0) && (fl.seats > 0)){
                 count = 0;
                 break;
             }
         }
         if (count){
-            printf("Invalid flight ID or No seats available.");
+            printf("Invalid flight ID or No seats available.\n");
             goto fid;
         }
         strcpy(t.f_id,f_id);
@@ -558,7 +558,7 @@ void check(){
 
 void admin(){
     options:
-    printf("\nEnter 1 for admin creation, 2 for flight modification, 3 for user modification, 4 to return to main menu: ");
+    printf("\nEnter 1 for admin creation, 2 for flight modification, 3 to return to main menu: ");
     int choice;
     scanf("%d",&choice);
     switch(choice){
@@ -569,9 +569,6 @@ void admin(){
             flights();
             break;
         case 3:
-            // user_deletion();
-            break;
-        case 4:
             menu();
             break;
         default:
