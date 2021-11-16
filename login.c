@@ -24,7 +24,7 @@ typedef struct{
     char f_mt[20];
     char f_yr[20];
     char b_time[20];
-    int fare;
+    long int fare;
 }customer;
 
 typedef struct{
@@ -46,7 +46,7 @@ void signup(int);
 void booking(person);
 long int gen_ticket();
 void check();
-void cancel();
+void cancel(person);
 
 const char* getpass(){
     char *passwrd;
@@ -83,6 +83,7 @@ void menu(){
             break;
         case 3:
             search();
+            menu();
             return;
             break;        
         case 4:
@@ -174,7 +175,7 @@ void login(){
                         booking(file);
                     return;
                     }else{
-                        cancel();
+                        cancel(file);
                         return;
                     }
                 }
@@ -575,9 +576,16 @@ void flights(){
     file = fopen("flights.dat","a+b"); 
 	while(choice==0){
     menu:
-        printf("Enter 1 for add flight, 2 for delete flight, 3 for modify flight, 4 for admin menu: ");
+        printf("Enter 0 for viewing flights, 1 for add flight, 2 for delete flight, 3 for modify flight, 4 for admin menu: ");
         scanf("%d",&choice);
         switch (choice){
+            case 0:
+                while(fread(&modif,sizeof(modif),1,file)==1){
+                    printf("%-5s  %-20s",modif.id,modif.name);
+                    printf("%-20s  %-20s",modif.source,modif.destination);
+                    printf("%4d  %4d\n",modif.seats,modif.fare);
+                }
+                break;
             case 1: //add flights
                 zero:
                 getchar();
@@ -635,6 +643,7 @@ void flights(){
                 fclose(file);
                 break;
             case 2: // delete flights
+
                 break;
             case 3: // modify flight
                 modify:
@@ -911,7 +920,7 @@ void search(){
        }  
        i++;  
     }    
-		if(flag==0){
+	if(flag==0){
 		found=1;
 		printf("\n%-5s  %-20s",f1.id,f1.name);
 		printf("%-20s  %-20s",f1.source,f1.destination);
@@ -925,7 +934,7 @@ void search(){
     return;
 }
 
-void cancel(){
+void cancel(person user){
     printf("\nWelcome to cancellation department!");
     int ch;
     label:
@@ -949,9 +958,8 @@ void cancel(){
     fp2 = fopen("temp.dat","ab");
     printf("ticket id to delete: ");
     scanf("%d",&ticket_id);
-    while(fread(&t,sizeof(customer),1,fp1))
-    {
-    	if(t.ticket_id==ticket_id){
+    while(fread(&t,sizeof(customer),1,fp1)){
+    	if((t.ticket_id==ticket_id) && (strcmp(t.uname,user.uname)==0)){
     		found = 1;
 		}
 		else
@@ -970,11 +978,10 @@ void cancel(){
         remove("temp.dat");
         printf("Ticket cancelled successfully! Want to cancel another?");
         goto label;
-	} 
-    else{
+	} else {
         remove("temp.dat");
-	    printf("Ticket ID invalid or ticket not found!");
-        cancel();
+	    printf("Ticket ID invalid or ticket not found booked under %s!",user.name);
+        // cancel();
     }
 }
 
