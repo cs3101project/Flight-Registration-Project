@@ -546,8 +546,7 @@ void admin(){
 
 void flights(){
 	int choice=0;
-    char id[10], mod[10];
-    // int p1,p2,p3,p4,p5,p6;
+    char id[10], mod[10], num[20];
     int p[7];
     int flag, ch1, ch2, ch3, h, m, i;
     char th[10], tm[10];
@@ -583,7 +582,6 @@ void flights(){
                 for(i=0;i<3;i++){
                     fl.id[i]=fl.name[i];
                 }
-                char num[20];
                 ch1 = fl.source[0],ch2=fl.destination[0];
                 ch3 = ch1*100+ch2;
                 itoa(ch3,num,10);
@@ -746,6 +744,21 @@ void flights(){
                                         goto er;
                                     }
                                     break;
+                            }
+                        }
+                        for(i=0;i<3;i++){
+                            temp.id[i]=temp.name[i];
+                        }
+                        ch1 = temp.source[0];
+                        ch2 = temp.destination[0];
+                        ch3 = ch1*100+ch2;
+                        itoa(ch3,num,10);
+                        strcat(temp.id,num);
+                        while(fread(&modif,sizeof(flight),1,file)==1){
+                            if (strcmp(temp.id,modif.id)==0){
+                                printf("Error! Flight with same ID exists. Program will exit now.");
+                                exit(0);
+                                break;
                             }
                         }
                         fwrite(&temp,sizeof(flight),1,t);
