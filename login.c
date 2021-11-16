@@ -33,6 +33,7 @@ typedef struct{
     char source[20];
     char destination[20];
     char name[20];
+    int fare;
 }flight;
 
 int menu();
@@ -78,7 +79,7 @@ int menu(){
             check();
             break;
         case 3:
-            // search();
+            search();
             break;        
         case 4:
             exit(0);
@@ -553,7 +554,7 @@ void flights(){
     FILE *file, *t;
 	flight fl,temp, modif;
     int count = 0, total = 0;
-    file = fopen("flights.dat","a+"); 
+    file = fopen("flights.dat","a+b"); 
 	while(choice==0){
     menu:
         printf("Enter 1 for add flight, 2 for delete flight, 3 for modify flight, 4 for admin menu: ");
@@ -561,15 +562,18 @@ void flights(){
         switch (choice){
             case 1: //add flights
                 zero:
-                printf("\nEnter the source of flight : ");
-                fgets(fl.source,20,stdin);
+                getchar();
+                printf("Enter the source of flight : ");
+                scanf("%s",fl.source);
                 printf("Enter the destination of flight : ");
-                fgets(fl.destination,20,stdin);
+                scanf("%s",fl.destination);
+                // fgets(fl.destination,20,stdin);
                 printf("Enter the name of the flight : ");
-                fgets(fl.name,20,stdin);
+                scanf("%s",fl.name);
+                // fgets(fl.name,20,stdin);
                 printf("Source : %s\nDestination:%s\nFlight name:%s\n",fl.source,fl.destination,fl.name);
                 one:
-                printf("\nEnter 1 to Confirm and 2 to Change: ");
+                printf("Enter 1 to Confirm and 2 to Change: ");
                 flag=0;
                 scanf("%d",&flag);
                 switch(flag){
@@ -605,8 +609,12 @@ void flights(){
                     fl.time[i]=th[i];
                 }
                 printf("Enter maximum number of seats: ");
-                scanf("%d",fl.seats);
+                scanf("%d", &fl.seats);
+                printf("Enter fare for the flight: ");
+                scanf("%d",&fl.fare);
                 fwrite(&fl,sizeof(flight),1,file);
+                printf("Flight with ID: %s, is added.",fl.id);
+                fclose(file);
                 break;
             case 2: // delete flights
                 break;
@@ -614,26 +622,35 @@ void flights(){
                 modify:
                 printf("Enter Flight ID to modify: ");
                 scanf("%s",id);
-                t = fopen("tempo.dat","w");
+                t = fopen("temp.dat","wb");
                 flag = 1;
                 while(fread(&fl,sizeof(flight),1,file)==1){
                     ++total;
                     if (strcmp(fl.id,id)==0){
                         printf("Flight Details.\n");
                         printf("Current ID: %s",fl.id);
+                        strcpy(temp.id,fl.id);
                         printf("\n1. seats: %d",fl.seats);
+                        temp.seats=fl.seats;
                         printf("\n2. time: %s",fl.time);
+                        strcpy(temp.time,fl.time);
                         printf("\n3. source: %s",fl.source);
+                        strcpy(temp.source,fl.source);
                         printf("\n4. destination: %s",fl.destination);
+                        strcpy(temp.destination,fl.destination);
                         printf("\n5. name: %s",fl.name);
+                        strcpy(temp.name,fl.name);
+                        printf("\n6. fare: Rs. %d\n", fl.fare);
+                        temp.fare=fl.fare;
                         flag = 0;
 // modification starts
                         chan:
-                        printf("Enter the serial number of the property you want to modify for the flight %s:", fl.name);
+                        printf("Enter the serial number of the property you want to modify for the flight %s: ", fl.name);
+                        getchar();
                         fgets(mod,12,stdin);
-                        int res = sscanf(mod,"%d %d %d %d %d",&p[0],&p[1],&p[2],&p[3],&p[4],&p[5]);
-
-                        for (int i = 0; i < res ; i++){
+                        int res = sscanf(mod,"%d %d %d %d %d %d",&p[0],&p[1],&p[2],&p[3],&p[4],&p[5],&p[6]);
+                        int check[8] = {0,0,0,0,0,0,0,0};
+                        for (i = 0; i < res ; i++){
                             switch(p[i]){
                                 case 1:
                                     seats:
@@ -651,6 +668,7 @@ void flights(){
                                         printf("Enter a valid option.");
                                         goto s1;
                                     }
+                                    check[0] = 1;
                                     break;
                                 case 2:
                                     t:
@@ -678,11 +696,12 @@ void flights(){
                                         printf("Enter a valid option.");
                                         goto t1;
                                     }
+                                    check[1] = 2;
                                     break;
                                 case 3:
                                     source:
                                     printf("Enter new departure of the flight (current: %s): ",fl.source);
-                                    fgets(temp.source,20,stdin);
+                                    scanf("%s",temp.source);
                                     so1:
                                     printf("Enter 1 to confirm, 2 to change new departure of flight (current: %s; modified: %s)\nEnter 3 to exit modification menu: ",fl.source,temp.source);
                                     scanf("%d",&choice);
@@ -695,11 +714,13 @@ void flights(){
                                         printf("Enter a valid option.");
                                         goto so1;
                                     }
+                                    check[2] = 3;
                                     break;
                                 case 4:
                                     des:
                                     printf("Enter new destination of the flight (current: %s): ",fl.destination);
-                                    fgets(temp.destination,20,stdin);
+                                    scanf("%s",temp.destination);
+                                    // fgets(temp.destination,20,stdin);
                                     de1:
                                     printf("Enter 1 to confirm, 2 to change new departure of flight (current: %s; modified: %s)\nEnter 3 to exit modification menu: ",fl.source,temp.source);
                                     scanf("%d",&choice);
@@ -712,13 +733,15 @@ void flights(){
                                         printf("Enter a valid option.");
                                         goto de1;
                                     }
+                                    check[3] = 4;
                                     break;
                                 case 5:
                                     na:
                                     printf("Enter new name of flight. (current: %s): ",fl.name);
-                                    fgets(temp.name,20,stdin);
+                                    scanf("%s",temp.name);
+                                    // fgets(temp.name,20,stdin);
                                     na1:
-                                    printf("Enter 1 to confirm, 2 to change new departure of flight (current: %s; modified: %s)\nEnter 3 to exit modification menu: ",fl.source,temp.source);
+                                    printf("Enter 1 to confirm, 2 to change new departure of flight (current: %s; modified: %s)\nEnter 3 to exit modification menu: ",fl.name,temp.name);
                                     scanf("%d",&choice);
                                     if(choice == 1){
                                     } else if (choice == 2) {
@@ -729,6 +752,24 @@ void flights(){
                                         printf("Enter a valid option.");
                                         goto na1;
                                     }
+                                    check[4] = 5;
+                                    break;
+                                case 6:
+                                    fare:
+                                    printf("Enter new fare (current: %d): ",fl.fare);
+                                    scanf("%d",&temp.fare);
+                                    printf("Enter 1 to confirm, 2 to change new fare for flight (current: %d; modified: %d)\nEnter 3 to exit modification menu: ",fl.fare,temp.fare);
+                                    scanf("%d",&choice);
+                                    if(choice == 1){
+                                    } else if (choice == 2) {
+                                        goto na;
+                                    } else if (choice == 3) {
+                                        goto menu;
+                                    } else {
+                                        printf("Enter a valid option.");
+                                        goto na1;
+                                    }
+                                    check[5] = 6;
                                     break;
                                 default:
                                     er:
@@ -746,32 +787,62 @@ void flights(){
                                     break;
                             }
                         }
-                        for(i=0;i<3;i++){
-                            temp.id[i]=temp.name[i];
-                        }
-                        ch1 = temp.source[0];
-                        ch2 = temp.destination[0];
-                        ch3 = ch1*100+ch2;
-                        itoa(ch3,num,10);
-                        strcat(temp.id,num);
-                        while(fread(&modif,sizeof(flight),1,file)==1){
-                            if (strcmp(temp.id,modif.id)==0){
-                                printf("Error! Flight with same ID exists. Program will exit now.");
-                                exit(0);
-                                break;
+
+                        
+                        if((check[2]==3) || (check[3]==4) || (check[4]==5)){
+                            char n_id[10];
+                            for(i=0;i<3;i++){
+                                n_id[i]=temp.name[i];
                             }
+                            ch1 = temp.source[0];
+                            ch2 = temp.destination[0];
+                            ch3 = ch1*100+ch2;
+                            itoa(ch3,num,10);
+                            strcat(n_id,num);
+                            strcpy(temp.id,n_id);
+                            while(fread(&modif,sizeof(flight),1,file)==1){
+                                if (strcmp(temp.id,modif.id)==0){
+                                    printf("Error! Flight with same ID exists. Program will exit now.");
+                                    exit(0);
+                                    break;
+                                }
+                            }
+                        } else {
+                            strcpy(temp.id,fl.id);
                         }
-                        fwrite(&temp,sizeof(flight),1,t);
+
+                        fwrite(&temp,sizeof(temp),1,t);
                         ++count;
                     }else{
-                        fwrite(&fl,sizeof(flight),1,t);
+                        fwrite(&fl,sizeof(fl),1,t);
                         ++count;
                     }
                 }
                 fclose(t);
+                t = fopen("temp.dat","rb");
+                while(fread(&modif,sizeof(fl),1,t)==1){
+                    // fwrite(&modif,sizeof(modif),1,file);
+                    printf("\n%s\n",modif.id);
+                    // printf("%d\n",modif.seats);
+                    // printf("%s\n",modif.source);
+                }
+                if((count==total)){
+                    fclose(t);
+                    fclose(file);
+                    remove("flights.dat");
+                    rename("temp.dat","flights.dat");
+                    printf("Modification successful.");
+                    // rename("temp.dat","flights.dat");
+                }else{
+                    printf("Some error occured");
+                    exit(0);
+                }
+                getchar();
                 if (flag) {
                     opt:
                     printf("INVALID FLIGHT ID. Enter 1 to try again, 2 to return to LOGIN menu, 3 to choose other option: ");
+                    fclose(t);
+                    remove("temp.dat");
                     scanf("%d",&flag);
                     switch(flag){
                         case 1:
@@ -789,13 +860,6 @@ void flights(){
                             break;
                     }
                 }
-                if(count==total){
-                    printf("Modification successful.");
-                }else{
-                    printf("Some error occured");
-                    exit(0);
-                }
-                getchar();
                 break;
             case 4:
                 login();
@@ -807,11 +871,40 @@ void flights(){
                 break;
         }
 	}
-    fclose(file);
     login(); // after every successfull action admin is logged out.
 }
 
-// void search();
+void search(){
+    flight f1;
+	FILE *fp;
+	int found=0;
+	char dest[20];
+	fp = fopen("flights.dat","rb");
+	printf("Enter Destination to search : ");
+	scanf("%s",dest);
+	while(fread(&f1,sizeof(flight),1,fp)){
+	int flag=0,i=0;  // integer variables declaration  
+    while(f1.destination[i]!='\0' && dest[i]!='\0')  // while loop  
+    {  
+       if(f1.destination[i]!=dest[i]){  
+           flag=1;  
+           break;  
+       }  
+       i++;  
+    }    
+		if(flag==0){
+		found=1;
+		printf("\n%-5s  %-20s",f1.id,f1.name);
+		printf("%-20s  %-20s",f1.source,f1.destination);
+		printf("%4d  %4d\n",f1.seats,f1.fare);
+	}
+	}
+	if(!found){
+		printf("\nFlight NOT found\n");
+	}
+	fclose(fp);
+	
+}
 
 void cancel(){
     printf("\nWelcome to cancellation department!");
