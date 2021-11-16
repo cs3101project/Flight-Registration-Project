@@ -573,7 +573,6 @@ void flights(){
     FILE *file, *t;
 	flight fl,temp, modif;
     int count = 0, total = 0;
-    file = fopen("flights.dat","a+b"); 
 	while(choice==0){
     menu:
         printf("Enter 0 for viewing flights, 1 for add flight, 2 for delete flight, 3 for modify flight, 4 for admin menu: ");
@@ -584,6 +583,7 @@ void flights(){
                 // printf("%-5s  %-20s");
                 // printf("%-20s  %-20s",modif.source,modif.destination);
                 // printf("%4d  %4d\n",modif.seats,modif.fare);
+                file = fopen("flights.dat","rb"); 
                 while(fread(&modif,sizeof(modif),1,file)==1){
                     printf("%-5s  %-20s",modif.id,modif.name);
                     printf("%-20s  %-20s",modif.source,modif.destination);
@@ -594,6 +594,7 @@ void flights(){
                     printf("\nNo flights are added!\n");
                 }
                 count = 0;
+                fclose(file);
                 break;
             case 1: //add flights
                 zero:
@@ -602,11 +603,9 @@ void flights(){
                 scanf("%s",fl.source);
                 printf("Enter the destination of flight : ");
                 scanf("%s",fl.destination);
-                // fgets(fl.destination,20,stdin);
                 printf("Enter the name of the flight : ");
                 fflush(stdin);
                 scanf("%[^\n]f",fl.name);
-                // fgets(fl.name,20,stdin);
                 printf("Source : %s\nDestination:%s\nFlight name:%s\n",fl.source,fl.destination,fl.name);
                 one:
                 printf("Enter 1 to Confirm and 2 to Change: ");
@@ -625,6 +624,7 @@ void flights(){
                 ch1 = fl.source[0],ch2=fl.destination[0];
                 ch3 = ch1*100+ch2;
                 itoa(ch3,num,10);
+                file = fopen("flights.dat","a+b"); 
                 strcat(fl.id,num);
                 while(fread(&temp,sizeof(flight),1,file)==1){
                     if (strcmp(fl.id,temp.id)==0){
@@ -654,8 +654,8 @@ void flights(){
                 break;
             case 2: // delete flights
                 label:
-                fclose(file);
-                file = fopen("flights.dat","a+b");
+                // fclose(file);
+                file = fopen("flights.dat","rb");
                 // printf("\nFLIGHTS AVAILABLE");
                 while(fread(&modif,sizeof(modif),1,file)==1){
                     printf("%-5s  %-20s",modif.id,modif.name);
@@ -663,6 +663,7 @@ void flights(){
                     printf("%4d  %4d",modif.seats,modif.fare);
                     ++count;
                 }
+                fclose(file);
                 if(!count){
                     printf("\nNo flights are available to remove!\n");
                     menu();
@@ -714,7 +715,7 @@ void flights(){
                 break;
             case 3: // modify flight
                 modify:
-                fclose(file);
+                // fclose(file);
                 file = fopen("flights.dat","rb");
                 // printf("\nFLIGHTS AVAILABLE");
                 while(fread(&modif,sizeof(modif),1,file)==1){
@@ -732,7 +733,8 @@ void flights(){
                 scanf("%s",id);
                 t = fopen("temp.dat","wb");
                 flag = 1;
-                file = fopen("flights.dat","a+b");
+                count = 0;
+                file = fopen("flights.dat","rb");
                 while(fread(&fl,sizeof(flight),1,file)==1){
                     ++total;
                     if (strcmp(fl.id,id)==0){
@@ -927,13 +929,14 @@ void flights(){
                     }
                 }
                 fclose(t);
+                fclose(file);
                 t = fopen("temp.dat","rb");
-                while(fread(&modif,sizeof(fl),1,t)==1){
+
+                while(fread(&modif,sizeof(modif),1,t)==1){
                     printf("\n%s\n",modif.id);
                 }
+                fclose(t);
                 if(count==total){
-                    fclose(t);
-                    fclose(file);
                     remove("flights.dat");
                     rename("temp.dat","flights.dat");
                     printf("Modification successful.");
