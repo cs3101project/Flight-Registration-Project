@@ -36,7 +36,7 @@ typedef struct{
     int fare;
 }flight;
 
-int menu();
+void menu();
 void login();
 void flights();
 void admin();
@@ -66,7 +66,7 @@ const char* getpass(){
     return passwrd;
 }
 
-int menu(){
+void menu(){
     int choice;
     printf("\nChoose 1 for LOGIN/REGISTER, 2 for CHECK TICKET STATUS, 3 for FLIGHT SEARCH, 4 for exit: ");
     label:
@@ -74,12 +74,15 @@ int menu(){
     switch(choice){
         case 1:
             login();
+            return;
             break;
         case 2:
             check();
+            return;
             break;
         case 3:
             search();
+            return;
             break;        
         case 4:
             exit(0);
@@ -89,7 +92,7 @@ int menu(){
             goto label;
         break;
     }
-    return 0;
+    return;
 }
 
 void login(){
@@ -115,9 +118,11 @@ void login(){
                 break;
             case 2:
                 signup(0);
+                return;
                 break;
             case 3:
                 menu();
+                return;
                 break;
             default:
                 printf("Enter a valid option.");
@@ -127,9 +132,10 @@ void login(){
             break;
         case 3:
             menu();
+            return;
             break;
         default:
-            printf("Enter a VAlid option.");
+            printf("Enter a valid option.");
             goto login;
             break;
     }
@@ -165,8 +171,10 @@ void login(){
                     scanf("%d",&flag);
                     if(flag == 1){
                         booking(file);
+                    return;
                     }else{
                         cancel();
+                        return;
                     }
                 }
                 logged = 1;
@@ -181,6 +189,7 @@ void login(){
     if(x && logged==0){
             printf("\nYou are not a ADMIN!\n");
             menu();
+            return;
     }else if(x==0 && logged==0){
         if(flag){
             printf("\nYou are not a registered user!"); 
@@ -191,12 +200,14 @@ void login(){
             switch(choice){
                 case 1:
                     signup(0);
+                    return;
                     break;
                 case 2:
                     goto new;
                     break;
                 case 3:
                     menu();
+                    return;
                     break;
                 default:
                     printf("Enter a Valid option.");
@@ -218,6 +229,7 @@ void login(){
                     break;
                 case 3:
                     menu();
+                    return;
                     break;
                 default:
                     goto l2;
@@ -319,7 +331,7 @@ void booking(person user){
     char dt[3], yr[6], f_id[10];
     flight fl;
     FILE *flight;
-    int count=0;
+    int count=1;
     l1:
     strcpy(t.name,user.name);
     file = fopen("booking.dat","r");
@@ -360,10 +372,10 @@ void booking(person user){
     case 1:
         printf("Enter the flight ID: ");
         scanf("%s",f_id);
-        flight = fopen("flight.dat","r");
+        flight = fopen("flights.dat","rb");
         while(fread(&fl,sizeof(fl),1,flight)==1){
-            if (fl.id == f_id){
-                count = 1;
+            if (strcmp(fl.id,f_id)==0){
+                count = 0;
                 break;
             }
         }
@@ -390,13 +402,14 @@ void booking(person user){
         strcpy(t.f_yr,yr);
         break;
     case 2:
-        // flightInfo();
-        printf("\nInformation regarding flights (search flights).");
+        search();
+        // printf("\nInformation regarding flights (search flights).");
         printf("Do you want to continue? Press enter to continue, carraige return to quit.\n");
         char ch;
         ch = getch();
         switch(ch){
             case 13:
+                goto fid;
                 break;
             case 8:
                 menu();
@@ -418,7 +431,7 @@ void booking(person user){
     int booking = 1;
     int age;
     while(booking){
-        int basefare=1000;
+        int basefare=fl.fare;
         ag:
         printf("Age of passenger: ");
         scanf("%d",&age);
@@ -462,6 +475,7 @@ void booking(person user){
                         break;
                     case 2:
                         menu();
+                        return;
                         break;
                     default:
                         printf("Enter a valid option.\n");
@@ -517,7 +531,7 @@ void check(){
             return;
         }
     }
-    printf("Invalid Ticket");
+    printf("Invalid Ticket or Ticket not Found!");
     goto label;
 }
 
@@ -872,6 +886,7 @@ void flights(){
         }
 	}
     login(); // after every successfull action admin is logged out.
+    return;
 }
 
 void search(){
@@ -903,7 +918,7 @@ void search(){
 		printf("\nFlight NOT found\n");
 	}
 	fclose(fp);
-	
+    return;
 }
 
 void cancel(){
