@@ -762,9 +762,6 @@ void flights(){
                         fgets(mod,14,stdin);
                         int res = sscanf(mod,"%d %d %d %d %d %d %d",&p[0],&p[1],&p[2],&p[3],&p[4],&p[5],&p[6]);
                         printf("%d\n",res);
-                        for(i=0;i<res;i++){
-                            printf("%d\n",p[i]);
-                        }
                         int check[8] = {0,0,0,0,0,0,0,0};
                         for (i = 0; i < res ; i++){
                             switch(p[i]){
@@ -853,7 +850,8 @@ void flights(){
                                 case 5:
                                     na:
                                     printf("Enter new name of flight. (current: %s): ",fl.name);
-                                    scanf("%s",temp.name);
+                                    fflush(stdin);
+                                    scanf("%[^\n]ff",temp.name);
                                     // fgets(temp.name,20,stdin);
                                     na1:
                                     printf("Enter 1 to confirm, 2 to change new departure of flight (current: %s; modified: %s)\nEnter 3 to exit modification menu: ",fl.name,temp.name);
