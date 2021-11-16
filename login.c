@@ -530,7 +530,7 @@ void check(){
     while(fread(&temp,sizeof(customer),1,fp)==1){
         if (temp.ticket_id == ticket){
             printf("Ticket found.");
-            printf("\nPassenger: %s\nFlight Date: %s %s %s\nFlight ID: %s\nAge: %d\nBooked under: %s\nFare: %d\nDate of Booking: %s",temp.p_name,temp.f_dt,temp.f_mt,temp.f_yr,temp.f_id,temp.p_age,temp.uname,t.fare,temp.b_time);
+            printf("\nPassenger: %s\nFlight Date: %s %s %s\nFlight ID: %s\nAge: %d\nBooked under: %s\nFare: %d\nDate of Booking: %s",temp.p_name,temp.f_dt,temp.f_mt,temp.f_yr,temp.f_id,temp.p_age,temp.uname,temp.fare,temp.b_time);
             goto label;
             return;
         }
