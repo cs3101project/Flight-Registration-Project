@@ -18,13 +18,13 @@ typedef struct{
     char uname[10];
     int p_age;
     int ntickets;
+    char fare[5];
     long int ticket_id;
     char f_id[10];
     char f_dt[20];
     char f_mt[20];
     char f_yr[20];
     char b_time[20];
-    long int fare;
 }customer;
 
 typedef struct{
@@ -431,25 +431,27 @@ void booking(person user){
         break;
     }
     int booking = 1;
-    int age;
+    int age, ch1;
     while(booking){
-        int basefare=fl.fare;
+        int basefare = fl.fare;
         ag:
         printf("Age of passenger: ");
         scanf("%d",&age);
         if(age < 3){
-        	basefare*1;
             c1:
-            printf("The passenger is an infant. The fair is Rs. %d. Enter 1 to confirm, 2 to change age: ",basefare);
-            t.fare = basefare;
+            sprintf(t.fare,"%d",basefare);
+            // t.fare = basefare;
+            printf("The passenger is an infant. The fair is Rs. %d. Enter 1 to confirm, 2 to change age: ",t.fare);
         }else if (age<=12 && age>=3){
             c2:
-            printf("The passenger is an child. The fair is Rs. %d. Enter 1 to confirm, 2 to change age: ",basefare*2);
-            t.fare = basefare*2;
+            sprintf(t.fare,"%d",basefare*2);
+            // t.fare = basefare*2;
+            printf("The passenger is an child. The fair is Rs. %d. Enter 1 to confirm, 2 to change age: ",t.fare);
         }else if (age > 12){
             c3:
-            printf("The passenger adult. The fair is Rs. %d. Enter 1 to confirm, 2 to change age: ",basefare*3);
-            t.fare = basefare*3;
+            sprintf(t.fare,"%d",basefare*3);
+            // t.fare = basefare*3;
+            printf("The passenger adult. The fair is Rs. %d. Enter 1 to confirm, 2 to change age: ",t.fare);
         } else {
             printf("Enter a valid age.\n");
             goto ag;
@@ -466,6 +468,7 @@ void booking(person user){
                 t.ticket_id = gen_ticket(t.p_name);
                 time_t curtime;
                 time(&curtime);
+                // printf("%d",t.fare);
                 strcpy(t.b_time,ctime(&curtime));
                 fwrite(&t,sizeof(customer),1,fp);
                 printf("Successfully booked! The ticket id is: %ld",t.ticket_id);
@@ -531,7 +534,7 @@ void check(){
     while(fread(&temp,sizeof(customer),1,fp)==1){
         if (temp.ticket_id == ticket){
             printf("Ticket found.");
-            printf("\nPassenger: %s\nFlight Date: %s %s %s\nFlight ID: %s\nAge: %d\nBooked under: %s\nFare: %d\nDate of Booking: %s",temp.p_name,temp.f_dt,temp.f_mt,temp.f_yr,temp.f_id,temp.p_age,temp.uname,temp.fare,temp.b_time);
+            printf("\nPassenger: %s\nFlight Date: %s %s %s\nFlight ID: %s\nAge: %d\nBooked under: %s\nFare: %s\nDate of Booking: %s",temp.p_name,temp.f_dt,temp.f_mt,temp.f_yr,temp.f_id,temp.p_age,temp.uname,temp.fare,temp.b_time);
             goto label;
             return;
         }
