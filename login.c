@@ -943,15 +943,12 @@ void flights(){
                 fclose(t);
                 fclose(file);
                 t = fopen("temp.dat","rb");
-
-                while(fread(&modif,sizeof(modif),1,t)==1){
-                    printf("\n%s\n",modif.id);
-                }
+                printf("Modified FLight ID: %s",temp.id);
                 fclose(t);
                 if(count==total){
                     remove("flights.dat");
                     rename("temp.dat","flights.dat");
-                    printf("Modification successful.");
+                    printf("\nModification successful.");
                 }else{
                     printf("Some error occured");
                     exit(0);
