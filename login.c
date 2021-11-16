@@ -37,7 +37,6 @@ typedef struct{
 
 int menu();
 void login();
-// void user(person*);
 void flights();
 void admin();
 void search();
@@ -46,7 +45,6 @@ void booking(person);
 long int gen_ticket();
 void check();
 void cancel();
-// void delete();
 
 const char* getpass(){
     char *passwrd;
@@ -757,6 +755,7 @@ void flights(){
                         ++count;
                     }
                 }
+                fclose(t);
                 if (flag) {
                     opt:
                     printf("INVALID FLIGHT ID. Enter 1 to try again, 2 to return to LOGIN menu, 3 to choose other option: ");
