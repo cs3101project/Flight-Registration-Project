@@ -568,7 +568,7 @@ void flights(){
 	int choice=0;
     char id[10], mod[10], num[20];
     int p[7];
-    int flag, ch1, ch2, ch3, h, m, i;
+    int flag, ch, ch1, ch2, ch3, h, m, i;
     char th[10], tm[10];
     FILE *file, *t;
 	flight fl,temp, modif;
@@ -580,11 +580,17 @@ void flights(){
         scanf("%d",&choice);
         switch (choice){
             case 0:
+                printf("\nFLIGHTS AVAILABLE");
                 while(fread(&modif,sizeof(modif),1,file)==1){
                     printf("%-5s  %-20s",modif.id,modif.name);
                     printf("%-20s  %-20s",modif.source,modif.destination);
                     printf("%4d  %4d\n",modif.seats,modif.fare);
+                    ++count;
                 }
+                if(!count){
+                    printf("\nNo flights are added!\n");
+                }
+                count = 0;
                 break;
             case 1: //add flights
                 zero:
@@ -643,10 +649,80 @@ void flights(){
                 fclose(file);
                 break;
             case 2: // delete flights
-
+                label:
+                fclose(file);
+                fopen("flights.dat","a+b");
+                printf("\nFLIGHTS AVAILABLE");
+                while(fread(&modif,sizeof(modif),1,file)==1){
+                    printf("%-5s  %-20s",modif.id,modif.name);
+                    printf("%-20s  %-20s",modif.source,modif.destination);
+                    printf("%4d  %4d",modif.seats,modif.fare);
+                    ++count;
+                }
+                if(!count){
+                    printf("\nNo flights are available to remove!\n");
+                    menu();
+                }
+                count = 0;
+                printf("\nTo remove flights enter 1, to return in main menu enter 2: ");
+                scanf("%d",&ch);
+                switch(ch){
+                    case 1:
+                        break;
+                    case 2:
+                        menu();
+                        return;
+                        break;
+                    default:
+                        printf("Enter a valid option.\n");
+                        goto label;
+                        break;
+                }
+                FILE *fp1,*fp2;
+                int found = 0;
+                char f_id[10];
+                fp1 = fopen("flights.dat","rb");
+                fp2 = fopen("temp.dat","ab");
+                printf("Enter flight id to remove: ");
+                scanf("%s",f_id);
+                while(fread(&modif,sizeof(modif),1,fp1)){
+                    if(strcmp(modif.id,f_id)==0)
+                        found = 1;
+                    else
+                        fwrite(&modif,sizeof(modif),1,fp2);
+                }
+                fclose(fp1);
+                fclose(fp2);
+                if (found){
+                    fp2 = fopen("temp.dat","r");
+                    fp1= fopen("flights.dat","wb");
+                    while(fread(&modif,sizeof(modif),1,fp2)){
+                        fwrite(&modif,sizeof(modif),1,fp1);
+                    }
+                    fclose(fp1);
+                    fclose(fp2);
+                    remove("temp.dat");
+                    printf("Flight removed successfully!");
+                } else {
+                    remove("temp.dat");
+                    printf("No flight found with ID: %s!",f_id);
+                }
                 break;
             case 3: // modify flight
                 modify:
+                fclose(file);
+                fopen("flights.dat","a+b");
+                printf("\nFLIGHTS AVAILABLE");
+                while(fread(&modif,sizeof(modif),1,file)==1){
+                    printf("%-5s  %-20s",modif.id,modif.name);
+                    printf("%-20s  %-20s",modif.source,modif.destination);
+                    printf("%4d  %4d",modif.seats,modif.fare);
+                    ++count;
+                }
+                if(!count){
+                    printf("\nNo flights are available to modify!\n");
+                    menu();
+                }
                 printf("Enter Flight ID to modify: ");
                 scanf("%s",id);
                 t = fopen("temp.dat","wb");
@@ -906,21 +982,53 @@ void search(){
     flight f1;
 	FILE *fp;
 	int found=0;
-	char dest[20];
+	char text[20];
 	fp = fopen("flights.dat","rb");
 	printf("Enter Destination to search : ");
-	scanf("%s",dest);
+	scanf("%s",text);
 	while(fread(&f1,sizeof(flight),1,fp)){
-	int flag=0,i=0;  // integer variables declaration  
-    while(f1.destination[i]!='\0' && dest[i]!='\0')  // while loop  
+    int flag1=0,flag2=0,flag3=0,flag4=0,i=0;  // integer variables declaration   
+	//USING DESTINATION
+    while(f1.destination[i]!='\0' &&text[i]!='\0')   
     {  
-       if(f1.destination[i]!=dest[i]){  
-           flag=1;  
+       if(f1.destination[i]!=text[i])  
+       {  
+           flag1=1;  
            break;  
        }  
        i++;  
-    }    
-	if(flag==0){
+    }
+    //USING SOURCE
+    while(f1.source[i]!='\0' &&text[i]!='\0')   
+    {  
+       if(f1.source[i]!=text[i])  
+       {  
+           flag2=1;  
+           break;  
+       }  
+       i++;  
+    }
+	//USING FLIGHT NAME
+    while(f1.name[i]!='\0' &&text[i]!='\0')   
+    {  
+       if(f1.name[i]!=text[i])  
+       {  
+           flag3=1;  
+           break;  
+       }  
+       i++;  
+    } 
+    //USING FLIGHT ID
+    while(f1.id[i]!='\0' &&text[i]!='\0')   
+    {  
+       if(f1.id[i]!=text[i])  
+       {  
+           flag4=1;  
+           break;  
+       }  
+       i++;  
+    }  
+	if(flag1==0||flag2==0||flag3==0||flag4==0){
 		found=1;
 		printf("\n%-5s  %-20s",f1.id,f1.name);
 		printf("%-20s  %-20s",f1.source,f1.destination);
@@ -958,20 +1066,20 @@ void cancel(person user){
     fp2 = fopen("temp.dat","ab");
     printf("ticket id to delete: ");
     scanf("%d",&ticket_id);
-    while(fread(&t,sizeof(customer),1,fp1)){
+    while(fread(&t,sizeof(t),1,fp1)){
     	if((t.ticket_id==ticket_id) && (strcmp(t.uname,user.uname)==0)){
     		found = 1;
 		}
 		else
-		    fwrite(&t,sizeof(flight),1,fp2);
+		    fwrite(&t,sizeof(t),1,fp2);
     }
     fclose(fp1);
     fclose(fp2);
     if (found){
     	fp2 = fopen("temp.dat","r");
     	fp1= fopen("booking.dat","wb");
-    	while(fread(&t,sizeof(flight),1,fp2)){
-    		fwrite(&t,sizeof(flight),1,fp1);
+    	while(fread(&t,sizeof(t),1,fp2)){
+    		fwrite(&t,sizeof(t),1,fp1);
 		}
 		fclose(fp1);
 		fclose(fp2);
