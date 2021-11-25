@@ -772,7 +772,7 @@ void flights()
             {
                 printf("%-5s  %-20s", modif.id, modif.name);
                 printf("%-20s  %-20s", modif.source, modif.destination);
-                printf("%4d  %4d", modif.seats, modif.fare);
+                printf("%4d  %4d\n", modif.seats, modif.fare);
                 ++count;
             }
             fclose(file);
@@ -1258,7 +1258,7 @@ label:
     int ticket_id, found = 0;
     fp1 = fopen("booking.dat", "r");
     fp2 = fopen("temp.dat", "ab");
-    printf("ticket id to delete: ");
+    printf("Ticket id to cancel: ");
     scanf("%d", &ticket_id);
     while (fread(&t, sizeof(t), 1, fp1))
     {
@@ -1295,6 +1295,8 @@ label:
             }
             fwrite(&tempo, sizeof(tempo), 1, fli);
         }
+        fclose(flight);
+        fclose(fli);
         remove("flights.dat");
         rename("temp.dat", "flights.dat");
         printf("Ticket cancelled successfully! Want to cancel another?");
@@ -1303,9 +1305,10 @@ label:
     else
     {
         remove("temp.dat");
-        printf("Ticket ID invalid or ticket not found booked under %s!", user.name);
+        printf("Ticket ID invalid or ticket not found booked under %s!\n", user.name);
         // cancel();
     }
+    return;
 }
 
 int main()
