@@ -1073,23 +1073,23 @@ void cancel(person user){
     FILE *fp1,*fp2;
     int ticket_id,found = 0;
     fp1 = fopen("booking.dat","r");
-    fp2 = fopen("temp.dat","ab");
+    fp2 = fopen("temp.dat","a+");
     printf("ticket id to delete: ");
     scanf("%d",&ticket_id);
-    while(fread(&t,sizeof(t),1,fp1)){
+    while(fread(&t,sizeof(customer),1,fp1)){
     	if((t.ticket_id==ticket_id) && (strcmp(t.uname,user.uname)==0)){
     		found = 1;
 		}
 		else
-		    fwrite(&t,sizeof(t),1,fp2);
+		    fwrite(&t,sizeof(flight),1,fp2);
     }
     fclose(fp1);
     fclose(fp2);
     if (found){
     	fp2 = fopen("temp.dat","r");
-    	fp1= fopen("booking.dat","wb");
-    	while(fread(&t,sizeof(t),1,fp2)){
-    		fwrite(&t,sizeof(t),1,fp1);
+    	fp1= fopen("booking.dat","w+");
+    	while(fread(&t,sizeof(flight),1,fp2)){
+    		fwrite(&t,sizeof(flight),1,fp1);
 		}
 		fclose(fp1);
 		fclose(fp2);
