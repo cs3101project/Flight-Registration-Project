@@ -1289,7 +1289,7 @@ label:
         flight = fopen("flights.dat", "r");
         while (fread(&tempo, sizeof(tempo), 1, flight) == 1)
         {
-            if (strcmp(tempo.id, t.fid) == 0)
+            if (strcmp(tempo.id, t.f_id) == 0)
             {
                 tempo.seats = tempo.seats + 1;
             }
