@@ -50,6 +50,8 @@ void booking(person);
 long int gen_ticket();
 void check();
 void cancel(person);
+void userdisp();
+
 // 033
 const char *getpass()
 {
@@ -109,7 +111,7 @@ void login()
 {
     person temp, file;
     FILE *fp;
-    int x, logged = 0;
+    int x, logged = 0; // x if 1 is admin if 0 is user; logged if 0 is not logged in if 1 is logged in
 login:
     printf("\nEnter 1 for ADMIN, 2 for USER, 3 for main MENU: ");
     int flag;
@@ -117,7 +119,7 @@ login:
     switch (flag)
     {
     case 1:
-        x = 1;
+        x = 1; // admin
         break;
     case 2:
     label:
@@ -127,10 +129,10 @@ login:
         switch (choice)
         {
         case 1:
-            x = 0;
+            x = 0; //user
             break;
         case 2:
-            signup(0);
+            signup(0); // signup a user (x=0)
             return;
             break;
         case 3:
@@ -152,34 +154,35 @@ login:
         goto login;
         break;
     }
-    flag = 1;
+    flag = 1; // setting defualt to user not registered
     new : if (x == 1)
     {
         printf("\nWelcome to Administrative portal.");
-        fp = fopen("admin.dat", "r");
+        fp = fopen("admin.dat", "r"); // if admin open admin file for admins
     }
     else
     {
         printf("\nWelcome to User portal.");
-        fp = fopen("user.dat", "r");
+        fp = fopen("user.dat", "r"); // if user open user file for users
     }
     printf("\nEnter your username: ");
     scanf("%s", temp.uname);
 pass:
-    if (!flag)
+    if (!flag) // runs only if user is registered flag = 0
     {
         printf("Please enter your password: ");
         strcpy(temp.pass, getpass());
         goto l3;
     }
-    // file = (person *) malloc(sizeof(person));
+    // checks if user is registered
     while (fread(&file, sizeof(person), 1, fp) == 1)
     {
         if (strcmp(file.uname, temp.uname) == 0)
         {
-            flag = 0;
+            flag = 0; // user is registered
             goto pass;
         l3:
+            // if user registered asks for password
             if (strcmp(file.pass, temp.pass) == 0)
             {
                 if (x == 1)
@@ -193,35 +196,32 @@ pass:
                     scanf("%d", &flag);
                     if (flag == 1)
                     {
-                        booking(file);
+                        booking(file); // redirects to booking function with user details
                         return;
                     }
                     else
                     {
-                        cancel(file);
+                        cancel(file); // redirects to cancel function with user details
                         return;
                     }
                 }
-                logged = 1;
+                logged = 1; // setting logged = 1 as entering this block means either admin or user is logged in
                 break;
-            }
-            else
-            {
-                continue;
             }
         }
     }
-    fclose(fp);
-
+    fclose(fp); // close respective files (admin.dat|user.dat)
+    // if admin and if not logged in
     if (x && logged == 0)
     {
         printf("\nYou are not a ADMIN!\n");
         menu();
         return;
     }
+    // if user and if not logged in
     else if (x == 0 && logged == 0)
     {
-        if (flag)
+        if (flag) // flag remains 1 if user is not registered (as it never enters the enter password block)
         {
             printf("\nYou are not a registered user!");
         l1:
@@ -231,11 +231,11 @@ pass:
             switch (choice)
             {
             case 1:
-                signup(0);
+                signup(0); // if not registered signup as user
                 return;
                 break;
             case 2:
-                goto new;
+                goto new; // try newly, starting from asking username
                 break;
             case 3:
                 menu();
@@ -247,7 +247,7 @@ pass:
                 break;
             }
         }
-        else
+        else // that is user is registered and user entered a wrong password and thus is not logged in
         {
             printf("\nIncorrect Password!");
         l2:
@@ -257,10 +257,10 @@ pass:
             switch (choice)
             {
             case 1:
-                goto pass;
+                goto pass; // enter password for same username again
                 break;
             case 2:
-                goto new;
+                goto new; // try using different account
                 break;
             case 3:
                 menu();
@@ -354,20 +354,20 @@ pass:
     }
 }
 // 033
-long int gen_ticket(char pname[])
+long int gen_ticket(char pname[]) // getting passenger name
 {
-    time_t sec;
-    long int ticket_id;
+    time_t sec;         // instantiating time variable
+    long int ticket_id; // instantiating ticket_id
     int num = 0, i;
     for (i = 0; i < strlen(pname); i++)
     {
-        num = num * 10 + pname[i];
+        num = num * 10 + pname[i]; // changing passanger name to ascii value and doing some operations as defined: p_name="Abc" num = 0 + 65; num = 6;; num = 60 + 97; num = 15 ;;;....
         num = num / 10;
     }
-    time(&sec);
-    ticket_id = sec + num;
+    time(&sec);            // getting time in seconds
+    ticket_id = sec + num; // adding both to get a unique ticket ID
     // printf("\n%ld\n",ticket_id);
-    return ticket_id;
+    return ticket_id; // returning the ticket ID
 }
 // 033
 void booking(person user)
@@ -645,7 +645,7 @@ label:
 void admin()
 {
 options:
-    printf("\nEnter 1 for admin creation, 2 for flight modification, 3 to return to main menu: ");
+    printf("\nEnter:\n1 for admin creation\n2 for flight modification\n3 for user display\n4 to admin display\n5 to return to main menu : ");
     int choice;
     scanf("%d", &choice);
     switch (choice)
@@ -657,12 +657,46 @@ options:
         flights();
         break;
     case 3:
+        userdisp();
+        break;
+    case 4:
+        admindisp();
+        break;
+    case 5:
         menu();
         break;
     default:
         printf("Enter a VALID option.");
         goto options;
     }
+}
+// 159
+void userdisp()
+{
+
+    person p1;
+    FILE *uf;
+    uf = fopen("user.dat", "r");
+    while (fread(&p1, sizeof(person), 1, uf))
+    {
+        printf("\n   %s  :  %s  \n", p1.uname, p1.name);
+    }
+    fclose(uf);
+    admin();
+}
+// 159
+void admindisp()
+{
+
+    person p1;
+    FILE *uf;
+    uf = fopen("admin.dat", "r");
+    while (fread(&p1, sizeof(person), 1, uf))
+    {
+        printf("\n   %s  :  %s  \n", p1.uname, p1.name);
+    }
+    fclose(uf);
+    admin();
 }
 // 159
 void flights()
