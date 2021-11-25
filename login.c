@@ -51,6 +51,7 @@ long int gen_ticket();
 void check();
 void cancel(person);
 void userdisp();
+void admindisp();
 
 // 033
 const char *getpass()
